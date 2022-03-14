@@ -3,8 +3,8 @@ from psycopg2 import Error
 class Products:
     """Connecting to a database"""
     def __init__(self):
-        self.connection = psycopg2.connect(user="daniel",
-                                           password="1",
+        self.connection = psycopg2.connect(user="mvcbaiel",
+                                           password="19172211",
                                            host="localhost",
                                            port="5432",
                                            database="mvc")
@@ -52,7 +52,7 @@ class Products:
         return self.cursor.rowcount
 
     def get(self, id):
-        self.cursor.execute("SELECT * FROM customers WHERE id = %s", (id,))
+        self.cursor.execute("SELECT * FROM products WHERE id = %s", (id,))
         return self.cursor.fetchone()
 
 
