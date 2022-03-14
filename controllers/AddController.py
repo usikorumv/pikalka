@@ -1,7 +1,9 @@
 from models.Products import Products
+from core.Controller import Controller
 
 class Addcontroller:
     def __init__(self):
+        self.addView = self.loadView("add")
         self.products = Products()
 
     def add(self, id, name, description, barcode, price):
@@ -11,6 +13,7 @@ class Addcontroller:
             return 'Success'
         else:
             return 'Error'
+        self.addView.close()
 
     def get_products(self):
         products = self.products.get_all()
@@ -19,13 +22,5 @@ class Addcontroller:
         else:
             return "Error"
 
-class Updatecontroller:
-    def __init__(self):
-        self.products = Products()
-
-    def update(self, id, name, description, barcode, price):
-        updated_product = self.products.update(id, name, description, barcode, price)
-        if updated_product:
-            return "Success"
-        else:
-            return "Error"
+    def main(self):
+        self.addView.main()

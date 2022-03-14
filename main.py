@@ -1,4 +1,5 @@
-from controllers.AddController import Addcontroller, Updatecontroller
+from controllers.AddController import Addcontroller
+from controllers.UpdateController import Updatecontroller
 
 def add_customer_view():
     while True:
