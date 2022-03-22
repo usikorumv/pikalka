@@ -1,6 +1,6 @@
 from core.Controller import Controller
 from core.Core import Core
-
+# from views.HomeView import bla
 """
     Main controller. It will be responsible for program's main screen behavior.
 """

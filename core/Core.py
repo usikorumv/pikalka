@@ -30,5 +30,5 @@ class Core:
             module = importlib.import_module("controllers." + controllerName)
             class_ = getattr(module, controllerName)
             response = class_()
-
+        print("Мы зашли в кор")
         return response

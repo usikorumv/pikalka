@@ -6,8 +6,8 @@ class Addcontroller:
         self.addView = self.loadView("add")
         self.products = Products()
 
-    def add(self, id, name, description, barcode, price):
-        response = self.products.add(id, name, description, barcode, price)
+    def add(self, name, description, barcode, price):
+        response = self.products.add(name, description, barcode, price)
 
         if response > 0:
             return 'Success'
@@ -23,4 +23,4 @@ class Addcontroller:
             return "Error"
 
     def main(self):
-        self.addView.main()
+        self.addView.add()

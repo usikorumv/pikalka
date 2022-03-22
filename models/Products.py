@@ -3,19 +3,19 @@ from psycopg2 import Error
 class Products:
     """Connecting to a database"""
     def __init__(self):
-        self.connection = psycopg2.connect(user="mvcbaiel",
-                                           password="19172211",
+        self.connection = psycopg2.connect(user="postgres",
+                                           password="1",
                                            host="localhost",
                                            port="5432",
-                                           database="mvc")
+                                           database="mvcdan")
         self.cursor = self.connection.cursor()
 
     """Adds new product to the products table"""
-    def add(self, name, description, barcode, price):
+    def add(self, name, price, barcode):
         response = 0
 
         try:
-            self.cursor.execute("INSERT INTO products (name, description, barcode, price) VALUES (%s, %s, %s, %s)", (name, description, barcode, price))
+            self.cursor.execute("INSERT INTO products (name, price , barcode) VALUES (%s, %s, %s)", (name, price, barcode))
             self.connection.commit()
             self.cursor.close()
             self.connection.close()
@@ -31,11 +31,11 @@ class Products:
         self.cursor.execute("SELECT * FROM products")
         return self.cursor.fetchall()
 
-    def update(self, id, name, description, barcode, price):
+    def update(self, id, name,barcode, price):
         responce = 0
         try:
-            self.cursor.execute("UPDATE products SET name = %s, description = %s,barcode = %s, price = %s WHERE id = %s",
-                                (name, description, barcode, price, id))
+            self.cursor.execute("UPDATE products SET name = %s,barcode = %s, price = %s WHERE id = %s",
+                                (name, price,barcode, id))
             self.connection.commit()
             self.cursor.close()
             self.connection.close()
