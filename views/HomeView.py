@@ -1,6 +1,9 @@
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
+from PyQt5.QtWidgets import QTableView
+
 from models.Products import Products
 
 
@@ -185,30 +188,15 @@ class HomeView(object):
         # подключение кнопки для добавления строки
         self.spinforRow.valueChanged.connect(self.change)
 
-        # def change(self):
-        #     self.tableWidget.setRowCount(int(self.spinforRow.text()))
+        # self.db = QSqlDatabase.addDatabase("QPSQL")
+        # self.db.open()
         #
-        # def getData(self):
-        #     rows = self.tableWidget.rowCount()
-        #     cols = self.tableWidget.columnCount()
-        #     data = []
-        #     for row in range(rows):
-        #         tmp = []
-        #         for col in range(cols):
-        #             try:
-        #                 tmp.append(self.tableWidget.item(row, col).text())
-        #             except:
-        #                 tmp.append("")
-        #         data.append(tmp)
-        #     for i in data:
-        #         print(i)
-        #         db = Products()
-        #         db.add(i[0], i[1], i[2])
-
-
-
-
-
+        # self.model = QSqlTableModel()
+        # self.model.setTable("some_table")
+        # self.model.setEditStrategy(QSqlTableModel.OnFieldChange)
+        # self.model.select()
+        # self.tableView = QTableView()
+        # self.tableView.setModel(self.model)
 
 
     def retranslateUi(self, MainWindow):
@@ -248,6 +236,16 @@ class HomeView(object):
         self.pay_btn.setText(_translate("MainWindow", "Pay"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.orderTab), _translate("MainWindow", "Order Product"))
 
+    # -------------------------------------------------------------------------------------------------------
+    # FOR SHOW PRODUCT
+
+
+
+    # -------------------------------------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------------------------------------
+    # FOR ADD PRODUCT
+
     def change(self):
         self.tableWidget.setRowCount(int(self.spinforRow.text()))
 
@@ -266,8 +264,15 @@ class HomeView(object):
         for i in data:
             print(i)
             db = Products()
+            # print(data)
             db.add(i[0], i[1], i[2])
 
+    # -------------------------------------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------------------------------------
+    # FOR ORDER PRODUCTS
+
+    # -------------------------------------------------------------------------------------------------------
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

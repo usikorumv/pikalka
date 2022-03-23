@@ -1,5 +1,5 @@
 import psycopg2
-from psycopg2 import Error
+
 class Products:
     """Connecting to a database"""
     def __init__(self):
