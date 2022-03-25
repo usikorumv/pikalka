@@ -1,8 +1,8 @@
 import sys
-
+from PyQt5.QtCore import QSize, Qt
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtSql import QSqlDatabase, QSqlTableModel
-from PyQt5.QtWidgets import QTableView
+from PyQt5.QtWidgets import QTableView, QGridLayout, QTableWidget, QTableWidgetItem
 
 from models.Products import Products
 
@@ -42,6 +42,9 @@ class HomeView(object):
         self.label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_5.setObjectName("label_5")
         self.tabWidget.addTab(self.homeTab, "")
+
+
+
         self.showTab = QtWidgets.QWidget()
         self.showTab.setObjectName("showTab")
         self.productView = QtWidgets.QTableView(self.showTab)
@@ -56,6 +59,44 @@ class HomeView(object):
         self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName("label_3")
         self.tabWidget.addTab(self.showTab, "")
+
+        grid_layout = QGridLayout()  # Создаём QGridLayout
+        self.showTab.setLayout(grid_layout)  # Устанавливаем данное размещение в центральный виджет
+
+        table = QTableWidget()  # Создаём таблицу
+        table.setColumnCount(3)  # Устанавливаем три колонки
+
+        # Устанавливаем заголовки таблицы
+        table.setHorizontalHeaderLabels(["barcode", "name of product", "price"])
+
+
+        all_products = self.get_all_products()
+        row = len(all_products)
+        table.setRowCount(row)  # установливаем строки в таблице
+
+
+        # Устанавливаем всплывающие подсказки на заголовки
+        table.horizontalHeaderItem(0).setToolTip("barcode")
+        table.horizontalHeaderItem(1).setToolTip("name of product")
+        table.horizontalHeaderItem(2).setToolTip("price")
+
+        # Устанавливаем выравнивание на заголовки
+        table.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
+        table.horizontalHeaderItem(1).setTextAlignment(Qt.AlignHCenter)
+        table.horizontalHeaderItem(2).setTextAlignment(Qt.AlignRight)
+        count_column = 0
+        # заполняем  строки
+        for i in all_products:
+            table.setItem(count_column, 0, QTableWidgetItem(str(i[1])))
+            table.setItem(count_column, 1, QTableWidgetItem(i[2]))
+            table.setItem(count_column, 2, QTableWidgetItem(str(i[3])))
+            count_column += 1
+        # делаем ресайз колонок по содержимому
+        table.resizeColumnsToContents()
+        table.setMinimumSize(QSize(1000, 1000))
+        grid_layout.addWidget(table, 0, 0)  # Добавляем таблицу в сетку
+
+
         self.addTab = QtWidgets.QWidget()
         self.addTab.setObjectName("addTab")
         self.tableWidget = QtWidgets.QTableWidget(self.addTab)
@@ -64,6 +105,8 @@ class HomeView(object):
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(3)
         self.tableWidget.setRowCount(1)
+
+
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -105,6 +148,8 @@ class HomeView(object):
         self.addProduct.setGeometry(QtCore.QRect(440, 390, 275, 120))
         self.addProduct.setObjectName("addProduct")
         self.tabWidget.addTab(self.addTab, "")
+
+
         self.orderTab = QtWidgets.QWidget()
         self.orderTab.setObjectName("orderTab")
         self.label_2 = QtWidgets.QLabel(self.orderTab)
@@ -128,7 +173,7 @@ class HomeView(object):
         self.tableWidget_order.setFont(font)
         self.tableWidget_order.setObjectName("tableWidget_order")
         self.tableWidget_order.setColumnCount(4)
-        self.tableWidget_order.setRowCount(1)
+        self.tableWidget_order.setRowCount(100)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_order.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -149,17 +194,11 @@ class HomeView(object):
         font = QtGui.QFont()
         font.setPointSize(30)
         self.submitbtn.setFont(font)
-        self.submitbtn.setObjectName("submitbtn")
+        self.submitbtn.setObjectName("sumbit")
         self.sum = QtWidgets.QLabel(self.orderTab)
-        self.sum.setGeometry(QtCore.QRect(30, 440, 321, 121))
-        font = QtGui.QFont()
-        font.setPointSize(30)
-        font.setBold(False)
-        font.setWeight(50)
-        self.sum.setFont(font)
-        self.sum.setText("")
-        self.sum.setAlignment(QtCore.Qt.AlignCenter)
-        self.sum.setObjectName("sum")
+
+        # self.sum.setAlignment(QtCore.Qt.AlignCenter)
+        # self.sum.setObjectName("sum")
         self.spinBox_for_order = QtWidgets.QSpinBox(self.orderTab)
         self.spinBox_for_order.setGeometry(QtCore.QRect(30, 340, 131, 81))
         font = QtGui.QFont()
@@ -177,6 +216,13 @@ class HomeView(object):
         font.setPointSize(30)
         self.pay_btn.setFont(font)
         self.pay_btn.setObjectName("pay_btn")
+
+        self.label_result = QtWidgets.QLabel(self.orderTab)
+        self.label_result.setGeometry(QtCore.QRect(200, 350, 400, 60))
+        self.label_result.setFont(font)
+        self.label_result.setText("0")
+
+
         self.tabWidget.addTab(self.orderTab, "")
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -185,8 +231,52 @@ class HomeView(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         # подключение кнопки добавления
         self.addProduct.clicked.connect(self.getData)
+        self.text_barcode = QtWidgets.QTextEdit(self.orderTab)
+        self.text_barcode.setGeometry(QtCore.QRect(30, 440, 200, 50))
+        self.text_barcode.setStyleSheet("font-family: \'Montserrat\';\n"
+                                        "font-size: 15px;\n"
+                                        "background-color: rgb(238, 238, 236);")
+        self.text_barcode.setObjectName("text_barcode")
+
+        # if len(self.text_barcode.toPlainText()) > 1:
+        #     self.start_order()
         # подключение кнопки для добавления строки
         self.spinforRow.valueChanged.connect(self.change)
+        self.submitbtn.clicked.connect(self.start_order)
+        self.c_column = 0
+        self.count_money = 0
+        # self.product = []
+    def start_order(self):
+
+        barcode = self.text_barcode.toPlainText()
+        product_ = self.get_product(barcode)
+        lst = []
+        lst2 = []
+        print(product_)
+        for i in product_:
+            lst.append(list(i))
+
+        for i in lst:
+            for j in i:
+                lst2.append(j)
+        print(type(lst2))
+            # for j in i:
+            #     lst.append(j)
+        # self.name = product[1]
+        # self.barcode = product[2]
+        # self.price = product[3]
+        self.tableWidget_order.setItem(self.c_column, 0, QTableWidgetItem(lst2[1]))
+        self.tableWidget_order.setItem(self.c_column, 1, QTableWidgetItem(lst2[2]))
+        self.tableWidget_order.setItem(self.c_column, 3, QTableWidgetItem(str(lst2[3])))
+        self.count_money += int(lst2[3])
+        self.c_column += 1
+        self.label_result.setText(str(self.count_money))
+        self.text_barcode.setText("")
+    def get_product(self, barcode):
+        product_obj = Products()
+        prod = product_obj.get(barcode)
+        return prod
+
 
         # self.db = QSqlDatabase.addDatabase("QPSQL")
         # self.db.open()
@@ -198,6 +288,10 @@ class HomeView(object):
         # self.tableView = QTableView()
         # self.tableView.setModel(self.model)
 
+    def get_all_products(self):
+        product = Products()
+        all_products = product.get_all()
+        return all_products
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

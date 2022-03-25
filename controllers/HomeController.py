@@ -34,3 +34,4 @@ class HomeController(Controller):
 
     def main(self):
         self.homeView.main()
+
